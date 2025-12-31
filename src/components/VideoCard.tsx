@@ -593,8 +593,11 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(function VideoCard
         label: 'AI问片',
         icon: <Sparkles size={20} />,
         onClick: () => {
-          setShowMobileActions(false); // 关闭菜单
-          setShowAIChat(true);
+          setShowMobileActions(false);
+          // 延迟打开 AIChatPanel，确保 MobileActionSheet 完全清理完成
+          setTimeout(() => {
+            setShowAIChat(true);
+          }, 250);
         },
         color: 'default' as const,
       });
@@ -860,7 +863,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(function VideoCard
                 return false;
               }}
             >
-              {actualYear}
+              {actualYear.slice(-2)}
             </div>
           )}
 
@@ -903,7 +906,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(function VideoCard
 
           {actualEpisodes && actualEpisodes > 1 && orientation === 'vertical' && (
             <div
-              className='absolute top-2 right-2 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-md shadow-md transition-all duration-300 ease-out group-hover:scale-110'
+              className='absolute top-2 right-2 bg-green-500/70 text-white text-xs font-semibold px-2 py-1 rounded-md shadow-md transition-all duration-300 ease-out group-hover:scale-110'
               style={{
                 WebkitUserSelect: 'none',
                 userSelect: 'none',

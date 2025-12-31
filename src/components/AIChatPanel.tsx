@@ -106,8 +106,8 @@ export default function AIChatPanel({
       };
       checkMobile();
 
-      // 聚焦输入框
-      if (inputRef.current) {
+      // 只在非移动设备上聚焦输入框
+      if (inputRef.current && window.innerWidth >= 768) {
         inputRef.current.focus();
       }
 
