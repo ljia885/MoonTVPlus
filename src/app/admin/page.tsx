@@ -11224,7 +11224,7 @@ function AdminPageClient() {
   const userLimit = 10;
 
   // 获取新版本用户列表
-  const fetchUsersV2 = useCallback(async (page: number = 1) => {
+  const fetchUsersV2 = useCallback(async (page = 1) => {
     try {
       setUserListLoading(true);
       const response = await fetch(`/api/admin/users?page=${page}&limit=${userLimit}`);

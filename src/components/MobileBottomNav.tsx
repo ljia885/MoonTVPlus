@@ -66,7 +66,7 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
     const runtimeConfig = (window as any).RUNTIME_CONFIG;
 
     // 基础导航项（不包括观影室）
-    let items = [
+    const items = [
       { icon: Home, label: '首页', href: '/' },
       {
         icon: Film,

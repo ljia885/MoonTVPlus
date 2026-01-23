@@ -24,10 +24,10 @@ import {
 import { processImageUrl } from '@/lib/utils';
 import { useLongPress } from '@/hooks/useLongPress';
 
-import { ImagePlaceholder } from '@/components/ImagePlaceholder';
-import MobileActionSheet from '@/components/MobileActionSheet';
 import AIChatPanel from '@/components/AIChatPanel';
 import DetailPanel from '@/components/DetailPanel';
+import { ImagePlaceholder } from '@/components/ImagePlaceholder';
+import MobileActionSheet from '@/components/MobileActionSheet';
 
 export interface VideoCardProps {
   id?: string;

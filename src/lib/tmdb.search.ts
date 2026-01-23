@@ -2,6 +2,7 @@
 
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import nodeFetch from 'node-fetch';
+
 import { getNextApiKey } from './tmdb.client';
 
 // TMDB API 默认 Base URL（不包含 /3/，由程序拼接）
@@ -226,7 +227,7 @@ export async function getTVSeasonDetails(
  */
 export function getTMDBImageUrl(
   path: string | null,
-  size: string = 'w500'
+  size = 'w500'
 ): string {
   if (!path) return '';
 

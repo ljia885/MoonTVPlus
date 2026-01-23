@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,no-console */
+import bs58 from 'bs58';
 import he from 'he';
 import Hls from 'hls.js';
-import bs58 from 'bs58';
 
 function getDoubanImageProxyConfig(): {
   proxyType:
@@ -155,7 +155,7 @@ export function processVideoUrl(originalUrl: string): string {
  */
 export async function getVideoResolutionFromM3u8(
   m3u8Url: string,
-  timeoutMs: number = 4000
+  timeoutMs = 4000
 ): Promise<{
   quality: string; // 如720p、1080p等
   loadSpeed: string; // 自动转换为KB/s或MB/s

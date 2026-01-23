@@ -2,9 +2,9 @@
 
 'use client';
 
-import { ChevronRight, Bot, ListVideo } from 'lucide-react';
+import { Bot, ChevronRight, ListVideo } from 'lucide-react';
 import Link from 'next/link';
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 import {
   BangumiCalendarData,
@@ -15,15 +15,15 @@ import { getTMDBImageUrl, TMDBItem } from '@/lib/tmdb.client';
 import { DoubanItem } from '@/lib/types';
 import { processImageUrl } from '@/lib/utils';
 
+import AIChatPanel from '@/components/AIChatPanel';
+import BannerCarousel from '@/components/BannerCarousel';
 import ContinueWatching from '@/components/ContinueWatching';
+import FireworksCanvas from '@/components/FireworksCanvas';
+import HttpWarningDialog from '@/components/HttpWarningDialog';
 import PageLayout from '@/components/PageLayout';
 import ScrollableRow from '@/components/ScrollableRow';
 import { useSite } from '@/components/SiteProvider';
 import VideoCard from '@/components/VideoCard';
-import HttpWarningDialog from '@/components/HttpWarningDialog';
-import BannerCarousel from '@/components/BannerCarousel';
-import AIChatPanel from '@/components/AIChatPanel';
-import FireworksCanvas from '@/components/FireworksCanvas';
 
 // 首页模块配置接口
 interface HomeModule {
@@ -151,7 +151,9 @@ function HomeClient() {
     const setCache = (key: string, data: any) => {
       try {
         localStorage.setItem(key, JSON.stringify({ data, timestamp: Date.now() }));
-      } catch {}
+      } catch {
+        // Ignore localStorage errors
+      }
     };
 
     const moviesCache = getCache('homepage_movies');

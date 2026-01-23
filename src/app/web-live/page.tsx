@@ -1,9 +1,9 @@
 'use client';
 
+import { AlertTriangle,Radio } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+
 import PageLayout from '@/components/PageLayout';
-import { Radio, AlertTriangle } from 'lucide-react';
-import Head from 'next/head';
 
 let Artplayer: any = null;
 let Hls: any = null;

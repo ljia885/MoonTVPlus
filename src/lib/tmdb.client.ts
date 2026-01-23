@@ -85,8 +85,8 @@ interface TMDBTVAiringTodayResponse {
  */
 export async function getTMDBUpcomingMovies(
   apiKey: string,
-  page: number = 1,
-  region: string = 'CN',
+  page = 1,
+  region = 'CN',
   proxy?: string,
   reverseProxyBaseUrl?: string
 ): Promise<{ code: number; list: TMDBMovie[] }> {
@@ -140,7 +140,7 @@ export async function getTMDBUpcomingMovies(
  */
 export async function getTMDBUpcomingTVShows(
   apiKey: string,
-  page: number = 1,
+  page = 1,
   proxy?: string,
   reverseProxyBaseUrl?: string
 ): Promise<{ code: number; list: TMDBTVShow[] }> {
@@ -400,7 +400,7 @@ export async function getTMDBTrendingContent(
  */
 export function getTMDBImageUrl(
   path: string | null,
-  size: string = 'w500'
+  size = 'w500'
 ): string {
   if (!path) return '';
   const baseUrl = typeof window !== 'undefined'
@@ -450,7 +450,7 @@ export const TMDB_GENRES: Record<number, string> = {
  * @param limit - 最多返回几个类型，默认2个
  * @returns 类型名称数组
  */
-export function getGenreNames(genreIds: number[] = [], limit: number = 2): string[] {
+export function getGenreNames(genreIds: number[] = [], limit = 2): string[] {
   return genreIds
     .map(id => TMDB_GENRES[id])
     .filter(Boolean)

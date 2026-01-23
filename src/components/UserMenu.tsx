@@ -30,7 +30,7 @@ import {
   X,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { getAuthInfoFromBrowserCookie } from '@/lib/auth';
@@ -38,11 +38,11 @@ import { clearAllDanmakuCache } from '@/lib/danmaku/api';
 import { CURRENT_VERSION } from '@/lib/version';
 import { UpdateStatus } from '@/lib/version_check';
 
+import { FavoritesPanel } from './FavoritesPanel';
+import { NotificationPanel } from './NotificationPanel';
+import { OfflineDownloadPanel } from './OfflineDownloadPanel';
 import { useVersionCheck } from './VersionCheckProvider';
 import { VersionPanel } from './VersionPanel';
-import { OfflineDownloadPanel } from './OfflineDownloadPanel';
-import { NotificationPanel } from './NotificationPanel';
-import { FavoritesPanel } from './FavoritesPanel';
 
 interface AuthInfo {
   username?: string;

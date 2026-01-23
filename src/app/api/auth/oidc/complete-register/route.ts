@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 检查用户名是否已存在（优先使用新版本）
-    let userExists = await db.checkUserExistV2(username);
+    const userExists = await db.checkUserExistV2(username);
     if (userExists) {
       return NextResponse.json(
         { error: '用户名已存在' },

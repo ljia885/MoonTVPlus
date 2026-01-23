@@ -7,16 +7,16 @@ import './globals.css';
 
 import { getConfig } from '@/lib/config';
 
+import { DanmakuCacheCleanup } from '../components/DanmakuCacheCleanup';
+import { DownloadBubble } from '../components/DownloadBubble';
+import { DownloadPanel } from '../components/DownloadPanel';
 import { GlobalErrorIndicator } from '../components/GlobalErrorIndicator';
 import { SiteProvider } from '../components/SiteProvider';
 import { ThemeProvider } from '../components/ThemeProvider';
-import { WatchRoomProvider } from '../components/WatchRoomProvider';
-import ChatFloatingWindow from '../components/watch-room/ChatFloatingWindow';
-import { DownloadProvider } from '../contexts/DownloadContext';
-import { DownloadBubble } from '../components/DownloadBubble';
-import { DownloadPanel } from '../components/DownloadPanel';
-import { DanmakuCacheCleanup } from '../components/DanmakuCacheCleanup';
 import TopProgressBar from '../components/TopProgressBar';
+import ChatFloatingWindow from '../components/watch-room/ChatFloatingWindow';
+import { WatchRoomProvider } from '../components/WatchRoomProvider';
+import { DownloadProvider } from '../contexts/DownloadContext';
 
 const inter = Inter({ subsets: ['latin'] });
 export const dynamic = 'force-dynamic';

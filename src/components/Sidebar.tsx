@@ -158,7 +158,7 @@ const Sidebar = ({ onToggle, activePath = '/' }: SidebarProps) => {
     const runtimeConfig = (window as any).RUNTIME_CONFIG;
 
     // 基础菜单项（不包括观影室）
-    let items = [
+    const items = [
       {
         icon: Film,
         label: '电影',

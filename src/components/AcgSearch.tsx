@@ -2,10 +2,10 @@
 'use client';
 
 import { AlertCircle, Download, ExternalLink, Loader2 } from 'lucide-react';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useCallback,useEffect, useRef, useState } from 'react';
 
-import Toast, { ToastProps } from '@/components/Toast';
 import CapsuleSwitch from '@/components/CapsuleSwitch';
+import Toast, { ToastProps } from '@/components/Toast';
 
 interface AcgSearchItem {
   title: string;

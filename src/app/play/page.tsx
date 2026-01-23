@@ -2,70 +2,69 @@
 
 'use client';
 
-import { Heart, Search, X, Cloud, Sparkles, AlertCircle } from 'lucide-react';
+import { AlertCircle,Cloud, Heart, Sparkles, X } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useRef, useState } from 'react';
 
-import { usePlaySync } from '@/hooks/usePlaySync';
-import { getDoubanDetail } from '@/lib/douban.client';
-import { useDownload } from '@/contexts/DownloadContext';
 import { getAuthInfoFromBrowserCookie } from '@/lib/auth';
-import { useSite } from '@/components/SiteProvider';
-
+import {
+  convertDanmakuFormat,
+  getDanmakuById,
+  getDanmakuFromCache,
+  getEpisodes,
+  initDanmakuModule,
+  loadDanmakuDisplayState,
+  loadDanmakuSettings,
+  saveDanmakuDisplayState,
+  saveDanmakuSettings,
+  searchAnime,
+} from '@/lib/danmaku/api';
+import {
+  getDanmakuAnimeId,
+  getDanmakuSearchKeyword,
+  getDanmakuSourceIndex,
+  getManualDanmakuSelection,
+  saveDanmakuAnimeId,
+  saveDanmakuSearchKeyword,
+  saveDanmakuSourceIndex,
+  saveManualDanmakuSelection,
+} from '@/lib/danmaku/selection-memory';
+import type { DanmakuAnime, DanmakuComment,DanmakuSelection, DanmakuSettings } from '@/lib/danmaku/types';
 import {
   deleteFavorite,
   deletePlayRecord,
   deleteSkipConfig,
   generateStorageKey,
   getAllPlayRecords,
+  getDanmakuFilterConfig,
+  getEpisodeFilterConfig,
   getSkipConfig,
   isFavorited,
   saveFavorite,
   savePlayRecord,
   saveSkipConfig,
   subscribeToDataUpdates,
-  getDanmakuFilterConfig,
-  getEpisodeFilterConfig,
 } from '@/lib/db.client';
-import {
-  convertDanmakuFormat,
-  getDanmakuById,
-  getEpisodes,
-  loadDanmakuSettings,
-  saveDanmakuSettings,
-  searchAnime,
-  initDanmakuModule,
-  getDanmakuFromCache,
-  saveDanmakuDisplayState,
-  loadDanmakuDisplayState,
-} from '@/lib/danmaku/api';
-import {
-  getDanmakuSourceIndex,
-  saveDanmakuSourceIndex,
-  getManualDanmakuSelection,
-  saveManualDanmakuSelection,
-  saveDanmakuSearchKeyword,
-  getDanmakuSearchKeyword,
-  saveDanmakuAnimeId,
-  getDanmakuAnimeId,
-} from '@/lib/danmaku/selection-memory';
-import type { DanmakuAnime, DanmakuSelection, DanmakuSettings, DanmakuComment } from '@/lib/danmaku/types';
-import { SearchResult, DanmakuFilterConfig, EpisodeFilterConfig } from '@/lib/types';
-import { getVideoResolutionFromM3u8, processImageUrl } from '@/lib/utils';
+import { getDoubanDetail } from '@/lib/douban.client';
 import { getTMDBImageUrl } from '@/lib/tmdb.search';
-
-import EpisodeSelector from '@/components/EpisodeSelector';
-import DownloadEpisodeSelector from '@/components/DownloadEpisodeSelector';
-import PageLayout from '@/components/PageLayout';
-import DoubanComments from '@/components/DoubanComments';
-import SmartRecommendations from '@/components/SmartRecommendations';
-import DanmakuFilterSettings from '@/components/DanmakuFilterSettings';
-import Toast, { ToastProps } from '@/components/Toast';
-import AIChatPanel from '@/components/AIChatPanel';
+import { DanmakuFilterConfig, EpisodeFilterConfig,SearchResult } from '@/lib/types';
+import { getVideoResolutionFromM3u8, processImageUrl } from '@/lib/utils';
 import { useEnableComments } from '@/hooks/useEnableComments';
-import PansouSearch from '@/components/PansouSearch';
-import CustomHeatmap from '@/components/CustomHeatmap';
+import { usePlaySync } from '@/hooks/usePlaySync';
+
+import AIChatPanel from '@/components/AIChatPanel';
 import CorrectDialog from '@/components/CorrectDialog';
+import DanmakuFilterSettings from '@/components/DanmakuFilterSettings';
+import DoubanComments from '@/components/DoubanComments';
+import DownloadEpisodeSelector from '@/components/DownloadEpisodeSelector';
+import EpisodeSelector from '@/components/EpisodeSelector';
+import PageLayout from '@/components/PageLayout';
+import PansouSearch from '@/components/PansouSearch';
+import { useSite } from '@/components/SiteProvider';
+import SmartRecommendations from '@/components/SmartRecommendations';
+import Toast, { ToastProps } from '@/components/Toast';
+
+import { useDownload } from '@/contexts/DownloadContext';
 
 // 扩展 HTMLVideoElement 类型以支持 hls 属性
 declare global {
@@ -545,7 +544,7 @@ function PlayPageClient() {
     // 只有用户主动点击推荐时才会添加 _reload 参数
     if (reloadParam && urlTitle && urlTitle !== videoTitle && !isSourceChangingRef.current) {
       console.log('[PlayPage] User clicked recommendation, reloading page');
-      window.location.href = window.location.href;
+      window.location.reload();
     }
 
     // 重置换源标记
@@ -1526,7 +1525,7 @@ function PlayPageClient() {
   const refreshXiaoyaUrl = async (
     hls: any,
     video: HTMLVideoElement,
-    isScheduled: boolean = false
+    isScheduled = false
   ) => {
     // 防抖：距离上次刷新不足3秒则不刷新
     const now = Date.now();
@@ -3911,7 +3910,7 @@ function PlayPageClient() {
   };
 
   // 处理弹幕选择
-  const handleDanmakuSelect = async (selection: DanmakuSelection, isManual: boolean = false) => {
+  const handleDanmakuSelect = async (selection: DanmakuSelection, isManual = false) => {
     console.log(`[弹幕选择] isManual=${isManual}, selection:`, selection);
     setCurrentDanmakuSelection(selection);
 
@@ -3944,7 +3943,7 @@ function PlayPageClient() {
   };
 
   // 处理用户选择弹幕源
-  const handleDanmakuSourceSelect = async (selectedAnime: DanmakuAnime, selectedIndex?: number, isManualSearch: boolean = false) => {
+  const handleDanmakuSourceSelect = async (selectedAnime: DanmakuAnime, selectedIndex?: number, isManualSearch = false) => {
     setShowDanmakuSourceSelector(false);
 
     try {
@@ -4863,12 +4862,14 @@ function PlayPageClient() {
                       return;
                     }
                     // 检查其他 HTTP 错误状态码
-                    const statusCode = data.response?.code || data.response?.status;
-                    if (statusCode && statusCode >= 400) {
-                      console.log(`HTTP ${statusCode} 错误`);
-                      hls.destroy();
-                      setVideoError(`HTTP ${statusCode} 错误`);
-                      return;
+                    {
+                      const statusCode = data.response?.code || data.response?.status;
+                      if (statusCode && statusCode >= 400) {
+                        console.log(`HTTP ${statusCode} 错误`);
+                        hls.destroy();
+                        setVideoError(`HTTP ${statusCode} 错误`);
+                        return;
+                      }
                     }
                     console.log('网络错误，尝试恢复...');
                     hls.startLoad();
